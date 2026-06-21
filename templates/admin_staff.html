@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Staff</title>
+</head>
+<body>
+
+    <h2>Manage Trek Staff</h2>
+
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Approved</th>
+            <th>Action</th>
+        </tr>
+
+        {% for staff in staff_list %}
+        <tr>
+            <td>{{ staff.id }}</td>
+            <td>{{ staff.name }}</td>
+            <td>{{ staff.email }}</td>
+            <td>{{ staff.is_approved }}</td>
+            <td>
+                {% if not staff.is_approved %}
+                    <a href="/admin/approve-staff/{{ staff.id }}">Approve</a>
+                {% else %}
+                    Approved
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="/admin/dashboard">Back to Dashboard</a>
+
+</body>
+</html>
