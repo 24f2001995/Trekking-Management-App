@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Treks</title>
+</head>
+<body>
+
+    <h1>Manage Treks</h1>
+
+    <h2>Create Trek</h2>
+
+    <form method="POST">
+
+        <label>Trek Name:</label>
+        <input type="text" name="name" required>
+        <br><br>
+
+        <label>Location:</label>
+        <input type="text" name="location" required>
+        <br><br>
+
+        <label>Difficulty:</label>
+        <select name="difficulty">
+            <option>Easy</option>
+            <option>Moderate</option>
+            <option>Hard</option>
+        </select>
+        <br><br>
+
+        <label>Duration (Days):</label>
+        <input type="number" name="duration" required>
+        <br><br>
+
+        <label>Available Slots:</label>
+        <input type="number" name="available_slots" required>
+        <br><br>
+
+        <button type="submit">Create Trek</button>
+
+    </form>
+
+    <hr>
+
+    <h2>Existing Treks</h2>
+
+<table border="1" cellpadding="8">
+
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Location</th>
+        <th>Difficulty</th>
+        <th>Duration</th>
+        <th>Slots</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for trek in treks %}
+    <tr>
+        <td>{{ trek.id }}</td>
+        <td>{{ trek.name }}</td>
+        <td>{{ trek.location }}</td>
+        <td>{{ trek.difficulty }}</td>
+        <td>{{ trek.duration }}</td>
+        <td>{{ trek.available_slots }}</td>
+        <td>{{ trek.status }}</td>
+
+        <td>
+            <a href="/admin/edit-trek/{{ trek.id }}">Edit</a>
+            |
+            <a href="/admin/delete-trek/{{ trek.id }}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+
+
+    <a href="/admin/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

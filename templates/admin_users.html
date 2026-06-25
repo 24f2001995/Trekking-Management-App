@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Users</title>
+</head>
+<body>
+
+<h1>Users</h1>
+
+<table border="1" cellpadding="8">
+
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Blacklisted</th>
+        <th>Action</th>
+    </tr>
+
+    {% for user in users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>{{ user.is_blacklisted }}</td>
+        <td>
+    {% if user.is_blacklisted %}
+        <a href="/admin/unblacklist-user/{{ user.id }}">Unblacklist</a>
+    {% else %}
+        <a href="/admin/blacklist-user/{{ user.id }}">Blacklist</a>
+    {% endif %}
+    </td>
+    </tr>
+
+    
+
+    {% endfor %}
+
+</table>
+
+<br>
+
+<a href="/admin/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

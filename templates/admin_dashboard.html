@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+    <h1>Admin Dashboard</h1>
+
+    <h3>Summary</h3>
+
+    <p>Total Users: {{ total_users }}</p>
+    <p>Total Staff: {{ total_staff }}</p>
+    <p>Total Treks: {{ total_treks }}</p>
+    <p>Total Bookings: {{ total_bookings }}</p>
+
+    <hr>
+
+    <h3>Actions</h3>
+
+    <a href="/admin/staff">Manage Staff</a><br><br>
+    <a href="/admin/treks">Manage Treks</a><br><br>
+    <a href="/admin/users">View Users</a><br><br>
+    <a href="/logout">Logout</a>
+
+</body>
+</html>
