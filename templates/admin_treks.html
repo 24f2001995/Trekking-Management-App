@@ -1,3 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Treks</title>
+</head>
+<body>
+
+<h1>Manage Treks</h1>
+
+<h2>Create Trek</h2>
+
+<form method="POST">
+
+    <label>Trek Name:</label>
+    <input type="text" name="name" required>
+    <br><br>
+
+    <label>Location:</label>
+    <input type="text" name="location" required>
+    <br><br>
+
+    <label>Difficulty:</label>
+    <select name="difficulty">
+        <option>Easy</option>
+        <option>Moderate</option>
+        <option>Hard</option>
+    </select>
+    <br><br>
+
+    <label>Duration (Days):</label>
+    <input type="number" name="duration" required>
+    <br><br>
+
+    <label>Start Date:</label>
+    <input type="date" name="start_date" required>
+    <br><br>
+
+    <label>End Date:</label>
+    <input type="date" name="end_date" required>
+    <br><br>
+
+    <label>Available Slots:</label>
+    <input type="number" name="available_slots" required>
+    <br><br>
+
+    <button type="submit">Create Trek</button>
+
+</form>
+
+<hr>
+
 <h2>Existing Treks</h2>
 
 <table border="1" cellpadding="8">
@@ -8,6 +59,8 @@
         <th>Location</th>
         <th>Difficulty</th>
         <th>Duration</th>
+        <th>Start Date</th>
+        <th>End Date</th>
         <th>Slots</th>
         <th>Status</th>
         <th>Assigned Staff</th>
@@ -22,8 +75,11 @@
         <td>{{ trek.location }}</td>
         <td>{{ trek.difficulty }}</td>
         <td>{{ trek.duration }}</td>
+        <td>{{ trek.start_date }}</td>
+        <td>{{ trek.end_date }}</td>
         <td>{{ trek.available_slots }}</td>
         <td>{{ trek.status }}</td>
+
         <td>
             {% if trek.assigned_staff %}
                 {{ trek.assigned_staff.name }} (ID: {{ trek.assigned_staff.id }})
@@ -31,30 +87,44 @@
                 None
             {% endif %}
         </td>
+
         <td>
             <form method="POST" action="/admin/assign-staff/{{ trek.id }}">
                 <select name="staff_id" required>
-                <option value="0" {% if trek.assigned_staff_id == None %}selected{% endif %}>
-                    None
-                </option>
 
-                {% for staff in staff_list %}
-                <option value="{{ staff.id }}" {% if trek.assigned_staff_id == staff.id %}selected{% endif %}>
-                    {{ staff.name }}
-                </option>
-                {% endfor %}
-            </select>
+                    <option value="0" {% if trek.assigned_staff_id == None %}selected{% endif %}>
+                        None
+                    </option>
+
+                    {% for staff in staff_list %}
+                    <option value="{{ staff.id }}"
+                        {% if trek.assigned_staff_id == staff.id %}selected{% endif %}>
+                        {{ staff.name }}
+                    </option>
+                    {% endfor %}
+
+                </select>
 
                 <button type="submit">Assign</button>
             </form>
         </td>
 
         <td>
-            <a href="/admin/edit-trek/{{ trek.id }}">Edit</a>
-            |
-            <a href="/admin/delete-trek/{{ trek.id }}">Delete</a>
+            <a href="/admin/edit-trek/{{ trek.id }}">Edit</a> |
+            <a href="/admin/delete-trek/{{ trek.id }}"
+               onclick="return confirm('Delete this trek?')">
+               Delete
+            </a>
         </td>
+
     </tr>
     {% endfor %}
 
 </table>
+
+<br>
+
+<a href="/admin/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Participants</title>
+</head>
+<body>
+
+<h1>Participants</h1>
+
+<p><b>Trek:</b> {{ trek.name }}</p>
+<p><b>Location:</b> {{ trek.location }}</p>
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Booking ID</th>
+        <th>User ID</th>
+        <th>User Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Booking Status</th>
+    </tr>
+
+    {% for booking in bookings %}
+    <tr>
+        <td>{{ booking.id }}</td>
+        <td>{{ booking.user_id }}</td>
+        <td>{{ booking.user.name }}</td>
+        <td>{{ booking.user.email }}</td>
+        <td>{{ booking.user.phone }}</td>
+        <td>{{ booking.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<a href="/staff/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff Profile</title>
+</head>
+<body>
+
+<h1>Update Staff Profile</h1>
+
+<form method="POST">
+
+    <label>Name:</label>
+    <input type="text" name="name" value="{{ staff.name }}" required>
+    <br><br>
+
+    <label>Email:</label>
+    <input type="email" value="{{ staff.email }}" readonly>
+    <br><br>
+
+    <label>Phone:</label>
+    <input type="text" name="phone" value="{{ staff.phone }}">
+    <br><br>
+
+    <label>Password:</label>
+    <input type="text" name="password" value="{{ staff.password }}" required>
+    <br><br>
+
+    <button type="submit">Update Profile</button>
+
+</form>
+
+<br>
+
+<a href="/staff/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

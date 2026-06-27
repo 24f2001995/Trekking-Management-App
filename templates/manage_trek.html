@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Trek</title>
+</head>
+<body>
+
+<h1>Manage Trek</h1>
+
+<p><b>Trek:</b> {{ trek.name }}</p>
+<p><b>Location:</b> {{ trek.location }}</p>
+<p><b>Difficulty:</b> {{ trek.difficulty }}</p>
+<p><b>Duration:</b> {{ trek.duration }} days</p>
+
+<form method="POST">
+    <label>Available Slots:</label>
+    <input type="number" name="available_slots" value="{{ trek.available_slots }}" required>
+    <br><br>
+
+    <label>Status:</label>
+    <select name="status">
+        <option value="Open" {% if trek.status == "Open" %}selected{% endif %}>Open</option>
+        <option value="Closed" {% if trek.status == "Closed" %}selected{% endif %}>Closed</option>
+        <option value="Started" {% if trek.status == "Started" %}selected{% endif %}>Started</option>
+        <option value="Ongoing" {% if trek.status == "Ongoing" %}selected{% endif %}>Ongoing</option>
+        <option value="Completed" {% if trek.status == "Completed" %}selected{% endif %}>Completed</option>
+    </select>
+    </select>
+    <br><br>
+
+    <button type="submit">Update Trek</button>
+</form>
+
+<br>
+
+<a href="/staff/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

@@ -108,7 +108,17 @@ def staff_dashboard():
     if "user_id" not in session or session["role"] != "staff":
         return redirect("/login")
 
-    return "Staff Dashboard"
+    staff = User.query.get(session["user_id"])
+
+    assigned_treks = Trek.query.filter_by(
+        assigned_staff_id=staff.id
+    ).all()
+
+    return render_template(
+        "staff_dashboard.html",
+        staff=staff,
+        assigned_treks=assigned_treks
+    )
 
 
 @app.route("/user/dashboard")
@@ -183,15 +193,22 @@ def admin_treks():
         location = request.form["location"]
         difficulty = request.form["difficulty"]
         duration = request.form["duration"]
+        start_date = request.form["start_date"]
+        end_date = request.form["end_date"]
         available_slots = request.form["available_slots"]
-
+        start_date = request.form["start_date"]
+        end_date = request.form["end_date"]
         new_trek = Trek(
+            new_trek = Trek(
             name=name,
             location=location,
             difficulty=difficulty,
             duration=duration,
+            start_date=start_date,
+            end_date=end_date,
             available_slots=available_slots,
             status="Open"
+        )
         )
 
         db.session.add(new_trek)
@@ -247,6 +264,8 @@ def edit_trek(trek_id):
         trek.location = request.form["location"]
         trek.difficulty = request.form["difficulty"]
         trek.duration = request.form["duration"]
+        trek.start_date = request.form["start_date"]
+        trek.end_date = request.form["end_date"]
         trek.available_slots = request.form["available_slots"]
 
         db.session.commit()
@@ -355,7 +374,8 @@ def admin_search():
             or_(
                 Trek.name.contains(keyword),
                 Trek.location.contains(keyword),
-                Trek.difficulty.contains(keyword)
+                Trek.difficulty.contains(keyword),
+                Trek.id == keyword if keyword.isdigit() else False
             )
         ).all()
 
@@ -363,7 +383,8 @@ def admin_search():
             User.role == "user",
             or_(
                 User.name.contains(keyword),
-                User.email.contains(keyword)
+                User.email.contains(keyword),
+                User.id == keyword if keyword.isdigit() else False
             )
         ).all()
 
@@ -371,7 +392,8 @@ def admin_search():
             User.role == "staff",
             or_(
                 User.name.contains(keyword),
-                User.email.contains(keyword)
+                User.email.contains(keyword),
+                User.id == keyword if keyword.isdigit() else False
             )
         ).all()
 
@@ -382,6 +404,68 @@ def admin_search():
         user_results=user_results,
         staff_results=staff_results
     )
+
+@app.route("/staff/manage-trek/<int:trek_id>", methods=["GET", "POST"])
+def staff_manage_trek(trek_id):
+    if "user_id" not in session or session["role"] != "staff":
+        return redirect("/login")
+
+    staff_id = session["user_id"]
+
+    trek = Trek.query.get(trek_id)
+
+    if not trek or trek.assigned_staff_id != staff_id:
+        return "You are not allowed to manage this trek."
+
+    if request.method == "POST":
+        trek.available_slots = request.form["available_slots"]
+        trek.status = request.form["status"]
+
+        db.session.commit()
+
+        return redirect("/staff/dashboard")
+
+    return render_template("manage_trek.html", trek=trek)
+
+@app.route("/staff/participants/<int:trek_id>")
+def staff_participants(trek_id):
+    if "user_id" not in session or session["role"] != "staff":
+        return redirect("/login")
+
+    staff_id = session["user_id"]
+
+    trek = Trek.query.get(trek_id)
+
+    # Only the assigned staff can view participants
+    if not trek or trek.assigned_staff_id != staff_id:
+        return "You are not allowed to view participants for this trek."
+
+    bookings = Booking.query.filter_by(trek_id=trek.id).all()
+
+    return render_template(
+        "staff_participants.html",
+        trek=trek,
+        bookings=bookings
+    )
+
+@app.route("/staff/profile", methods=["GET", "POST"])
+def staff_profile():
+    if "user_id" not in session or session["role"] != "staff":
+        return redirect("/login")
+
+    staff = User.query.get(session["user_id"])
+
+    if request.method == "POST":
+        staff.name = request.form["name"]
+        staff.phone = request.form["phone"]
+        staff.password = request.form["password"]
+
+        db.session.commit()
+
+        return redirect("/staff/dashboard")
+
+    return render_template("staff_profile.html", staff=staff)
+
 @app.route("/logout")
 def logout():
     session.clear()
