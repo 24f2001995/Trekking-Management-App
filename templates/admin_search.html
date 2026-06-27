@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Search</title>
+</head>
+<body>
+
+<h1>Admin Search</h1>
+
+<form method="GET">
+    <label>Search Keyword:</label>
+    <input type="text" name="keyword" value="{{ keyword }}" required>
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+<h2>Treks</h2>
+<table border="1" cellpadding="8">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Location</th>
+        <th>Difficulty</th>
+        <th>Status</th>
+    </tr>
+
+    {% for trek in trek_results %}
+    <tr>
+        <td>{{ trek.id }}</td>
+        <td>{{ trek.name }}</td>
+        <td>{{ trek.location }}</td>
+        <td>{{ trek.difficulty }}</td>
+        <td>{{ trek.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Users</h2>
+<table border="1" cellpadding="8">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Blacklisted</th>
+    </tr>
+
+    {% for user in user_results %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.is_blacklisted }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Staff</h2>
+<table border="1" cellpadding="8">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Approved</th>
+        <th>Blacklisted</th>
+    </tr>
+
+    {% for staff in staff_results %}
+    <tr>
+        <td>{{ staff.id }}</td>
+        <td>{{ staff.name }}</td>
+        <td>{{ staff.email }}</td>
+        <td>{{ staff.is_approved }}</td>
+        <td>{{ staff.is_blacklisted }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<a href="/admin/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from database import db
 from models import User, Trek, Booking, StaffProfile
+from sqlalchemy import or_
 
 app = Flask(__name__)
 app.secret_key = "simple-secret-key"
@@ -199,7 +200,17 @@ def admin_treks():
         return redirect("/admin/treks")
 
     treks = Trek.query.all()
-    return render_template("admin_treks.html", treks=treks)
+    staff_list = User.query.filter_by(
+        role="staff",
+        is_approved=True,
+        is_blacklisted=False
+        ).all()
+
+    return render_template(
+        "admin_treks.html",
+        treks=treks,
+        staff_list=staff_list
+        )
 
 @app.route("/admin/users")
 def admin_users():
@@ -271,6 +282,106 @@ def unblacklist_user(user_id):
 
     return redirect("/admin/users")
 
+@app.route("/admin/blacklist-staff/<int:staff_id>")
+def blacklist_staff(staff_id):
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    staff = User.query.get(staff_id)
+
+    if staff and staff.role == "staff":
+        staff.is_blacklisted = True
+        db.session.commit()
+
+    return redirect("/admin/staff")
+
+
+@app.route("/admin/unblacklist-staff/<int:staff_id>")
+def unblacklist_staff(staff_id):
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    staff = User.query.get(staff_id)
+
+    if staff and staff.role == "staff":
+        staff.is_blacklisted = False
+        db.session.commit()
+
+    return redirect("/admin/staff")
+
+@app.route("/admin/assign-staff/<int:trek_id>", methods=["POST"])
+def assign_staff(trek_id):
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    staff_id = int(request.form["staff_id"])
+
+    trek = Trek.query.get(trek_id)
+
+    if trek:
+        if staff_id == 0:
+            trek.assigned_staff_id = None
+        else:
+            staff = User.query.get(staff_id)
+
+            if staff and staff.role == "staff" and staff.is_approved and not staff.is_blacklisted:
+                trek.assigned_staff_id = staff.id
+
+        db.session.commit()
+
+    return redirect("/admin/treks")
+
+@app.route("/admin/bookings")
+def admin_bookings():
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    bookings = Booking.query.all()
+    return render_template("admin_bookings.html", bookings=bookings)
+
+@app.route("/admin/search")
+def admin_search():
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    keyword = request.args.get("keyword", "")
+
+    trek_results = []
+    user_results = []
+    staff_results = []
+
+    if keyword:
+        trek_results = Trek.query.filter(
+            or_(
+                Trek.name.contains(keyword),
+                Trek.location.contains(keyword),
+                Trek.difficulty.contains(keyword)
+            )
+        ).all()
+
+        user_results = User.query.filter(
+            User.role == "user",
+            or_(
+                User.name.contains(keyword),
+                User.email.contains(keyword)
+            )
+        ).all()
+
+        staff_results = User.query.filter(
+            User.role == "staff",
+            or_(
+                User.name.contains(keyword),
+                User.email.contains(keyword)
+            )
+        ).all()
+
+    return render_template(
+        "admin_search.html",
+        keyword=keyword,
+        trek_results=trek_results,
+        user_results=user_results,
+        staff_results=staff_results
+    )
 @app.route("/logout")
 def logout():
     session.clear()

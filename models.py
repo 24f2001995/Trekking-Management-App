@@ -46,6 +46,9 @@ class Trek(db.Model):
 
     end_date = db.Column(db.Date)
 
+    assigned_staff = db.relationship("User", foreign_keys=[assigned_staff_id])
+    
+
 
 class Booking(db.Model):
     __tablename__ = "bookings"
@@ -61,6 +64,8 @@ class Booking(db.Model):
 
     payment_status = db.Column(db.String(20), default="Unpaid")
 
+    user = db.relationship("User", backref="bookings")
+    trek = db.relationship("Trek", backref="bookings")
 
 class StaffProfile(db.Model):
     __tablename__ = "staff_profiles"
