@@ -114,11 +114,19 @@ def staff_dashboard():
     assigned_treks = Trek.query.filter_by(
         assigned_staff_id=staff.id
     ).all()
+    trekker_counts = {}
+
+    for trek in assigned_treks:
+        trekker_counts[trek.id] = Booking.query.filter_by(
+            trek_id=trek.id,
+            status="Booked"
+        ).count()
 
     return render_template(
         "staff_dashboard.html",
         staff=staff,
-        assigned_treks=assigned_treks
+        assigned_treks=assigned_treks,
+        trekker_counts=trekker_counts
     )
 
 
@@ -460,6 +468,15 @@ def staff_manage_trek(trek_id):
         trek.available_slots = request.form["available_slots"]
         trek.status = request.form["status"]
 
+        if trek.status == "Completed":
+            bookings = Booking.query.filter_by(
+                trek_id=trek.id,
+                status="Booked"
+            ).all()
+
+            for booking in bookings:
+                booking.status = "Completed"
+
         db.session.commit()
 
         return redirect("/staff/dashboard")
@@ -580,6 +597,29 @@ def toggle_payment(booking_id):
         db.session.commit()
 
     return redirect("/admin/bookings")
+
+@app.route("/user/cancel-booking/<int:booking_id>")
+def cancel_booking(booking_id):
+    if "user_id" not in session or session["role"] != "user":
+        return redirect("/login")
+
+    booking = Booking.query.get(booking_id)
+
+    if not booking or booking.user_id != session["user_id"]:
+        return "You are not allowed to cancel this booking."
+
+    if booking.status != "Booked":
+        return "This booking cannot be cancelled."
+
+    if booking.trek.status != "Open":
+        return "You can cancel only open trek bookings."
+
+    booking.status = "Cancelled"
+    booking.trek.available_slots = booking.trek.available_slots + 1
+
+    db.session.commit()
+
+    return redirect("/user/bookings")
 
 @app.route("/logout")
 def logout():

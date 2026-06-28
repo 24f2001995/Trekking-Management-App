@@ -31,7 +31,7 @@
         <td>{{ trek.difficulty }}</td>
         <td>{{ trek.available_slots }}</td>
         <td>{{ trek.status }}</td>
-        <td>{{ trek.bookings|length }}</td>
+        <td>{{ trekker_counts[trek.id] }}</td>
         <td>
             <a href="/staff/manage-trek/{{ trek.id }}">Manage</a>
             |

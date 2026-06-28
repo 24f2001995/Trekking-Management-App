@@ -27,6 +27,13 @@
         <td>{{ booking.trek.status }}</td>
         <td>{{ booking.status }}</td>
         <td>{{ booking.payment_status }}</td>
+        <td>
+            {% if booking.status == "Booked" and booking.trek.status == "Open" %}
+                <a href="/user/cancel-booking/{{ booking.id }}">Cancel</a>
+            {% else %}
+                No Action
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>
