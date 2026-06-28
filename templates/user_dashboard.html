@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+</head>
+<body>
+
+<h1>User Dashboard</h1>
+
+<p>Welcome, {{ user.name }}</p>
+
+<h2>Dashboard</h2>
+
+<p>Available Treks: {{ available_treks_count }}</p>
+<p>My Bookings: {{ my_bookings_count }}</p>
+
+<hr>
+
+<h2>Actions</h2>
+
+<a href="/user/treks">View Available Treks</a><br><br>
+<a href="/user/bookings">My Bookings / Trekking History</a><br><br>
+<a href="/user/profile">Edit Profile</a><br><br>
+<a href="/logout">Logout</a>
+
+</body>
+</html>

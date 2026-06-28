@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 from database import db
 from models import User, Trek, Booking, StaffProfile
 from sqlalchemy import or_
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "simple-secret-key"
@@ -126,24 +127,48 @@ def user_dashboard():
     if "user_id" not in session or session["role"] != "user":
         return redirect("/login")
 
-    return """
-    <h1>User Dashboard</h1>
+    user = User.query.get(session["user_id"])
 
-    <a href="/user/treks">View Available Treks</a><br><br>
+    available_treks_count = Trek.query.filter_by(status="Open").count()
 
-    <a href="/user/bookings">My Bookings / Trekking History</a><br><br>
+    my_bookings_count = Booking.query.filter_by(
+        user_id=user.id
+    ).count()
 
-    <a href="/user/profile">Edit Profile</a><br><br>
-
-    <a href="/logout">Logout</a>
-    """
+    return render_template(
+        "user_dashboard.html",
+        user=user,
+        available_treks_count=available_treks_count,
+        my_bookings_count=my_bookings_count
+    )
 
 @app.route("/user/treks")
 def user_treks():
     if "user_id" not in session or session["role"] != "user":
         return redirect("/login")
 
-    return "Available Treks Page"
+    location = request.args.get("location", "")
+    difficulty = request.args.get("difficulty", "")
+
+    query = Trek.query.filter(
+        Trek.status == "Open",
+        Trek.available_slots > 0
+    )
+
+    if location:
+        query = query.filter(Trek.location.contains(location))
+
+    if difficulty:
+        query = query.filter(Trek.difficulty == difficulty)
+
+    treks = query.all()
+
+    return render_template(
+        "user_treks.html",
+        treks=treks,
+        location=location,
+        difficulty=difficulty
+    )
 
 
 @app.route("/user/bookings")
@@ -151,15 +176,30 @@ def user_bookings():
     if "user_id" not in session or session["role"] != "user":
         return redirect("/login")
 
-    return "My Bookings and Trekking History Page"
+    bookings = Booking.query.filter_by(
+        user_id=session["user_id"]
+    ).all()
+
+    return render_template("user_bookings.html", bookings=bookings)
 
 
-@app.route("/user/profile")
+@app.route("/user/profile", methods=["GET", "POST"])
 def user_profile():
     if "user_id" not in session or session["role"] != "user":
         return redirect("/login")
 
-    return "Edit Profile Page"
+    user = User.query.get(session["user_id"])
+
+    if request.method == "POST":
+        user.name = request.form["name"]
+        user.phone = request.form["phone"]
+        user.password = request.form["password"]
+
+        db.session.commit()
+
+        return redirect("/user/dashboard")
+
+    return render_template("user_profile.html", user=user)
 
 @app.route("/admin/staff")
 def admin_staff():
@@ -196,10 +236,9 @@ def admin_treks():
         start_date = request.form["start_date"]
         end_date = request.form["end_date"]
         available_slots = request.form["available_slots"]
-        start_date = request.form["start_date"]
-        end_date = request.form["end_date"]
+        start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d").date()
+        end_date = datetime.strptime(request.form["end_date"], "%Y-%m-%d").date()
         new_trek = Trek(
-            new_trek = Trek(
             name=name,
             location=location,
             difficulty=difficulty,
@@ -209,7 +248,7 @@ def admin_treks():
             available_slots=available_slots,
             status="Open"
         )
-        )
+        
 
         db.session.add(new_trek)
         db.session.commit()
@@ -264,8 +303,8 @@ def edit_trek(trek_id):
         trek.location = request.form["location"]
         trek.difficulty = request.form["difficulty"]
         trek.duration = request.form["duration"]
-        trek.start_date = request.form["start_date"]
-        trek.end_date = request.form["end_date"]
+        trek.start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d").date()
+        trek.end_date = datetime.strptime(request.form["end_date"], "%Y-%m-%d").date()
         trek.available_slots = request.form["available_slots"]
 
         db.session.commit()
@@ -465,6 +504,82 @@ def staff_profile():
         return redirect("/staff/dashboard")
 
     return render_template("staff_profile.html", staff=staff)
+
+@app.route("/user/book/<int:trek_id>")
+def book_trek(trek_id):
+    if "user_id" not in session or session["role"] != "user":
+        return redirect("/login")
+
+    user_id = session["user_id"]
+
+    trek = Trek.query.get(trek_id)
+
+    if not trek:
+        return "Trek not found."
+
+    if trek.status != "Open":
+        return "This trek is not open for booking."
+
+    if trek.available_slots <= 0:
+        return "No slots available."
+
+    existing_booking = Booking.query.filter_by(
+        user_id=user_id,
+        trek_id=trek.id,
+        status="Booked"
+    ).first()
+
+    if existing_booking:
+        return "You have already booked this trek."
+
+    new_booking = Booking(
+        user_id=user_id,
+        trek_id=trek.id,
+        status="Booked",
+        payment_status="Unpaid"
+    )
+
+    trek.available_slots = trek.available_slots - 1
+
+    db.session.add(new_booking)
+    db.session.commit()
+
+    return redirect("/user/bookings")
+
+@app.route("/admin/participants/<int:trek_id>")
+def admin_participants(trek_id):
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    trek = Trek.query.get(trek_id)
+
+    if not trek:
+        return "Trek not found."
+
+    bookings = Booking.query.filter_by(trek_id=trek.id).all()
+
+    return render_template(
+        "staff_participants.html",
+        trek=trek,
+        bookings=bookings
+    )
+
+@app.route("/admin/payment/<int:booking_id>")
+def toggle_payment(booking_id):
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    booking = Booking.query.get(booking_id)
+
+    if booking:
+        if booking.payment_status == "Paid":
+            booking.payment_status = "Unpaid"
+        else:
+            booking.payment_status = "Paid"
+
+        db.session.commit()
+
+    return redirect("/admin/bookings")
 
 @app.route("/logout")
 def logout():

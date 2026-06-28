@@ -78,13 +78,26 @@
         <td>{{ trek.start_date }}</td>
         <td>{{ trek.end_date }}</td>
         <td>{{ trek.available_slots }}</td>
-        <td>{{ trek.status }}</td>
+
+        <td>
+            {% if trek.status == "Open" %}
+                <span style="color:green;"><b>{{ trek.status }}</b></span>
+            {% elif trek.status == "Closed" %}
+                <span style="color:red;"><b>{{ trek.status }}</b></span>
+            {% elif trek.status == "Ongoing" %}
+                <span style="color:orange;"><b>{{ trek.status }}</b></span>
+            {% elif trek.status == "Completed" %}
+                <span style="color:blue;"><b>{{ trek.status }}</b></span>
+            {% else %}
+                {{ trek.status }}
+            {% endif %}
+        </td>
 
         <td>
             {% if trek.assigned_staff %}
                 {{ trek.assigned_staff.name }} (ID: {{ trek.assigned_staff.id }})
             {% else %}
-                None
+                <span style="color:red;">Not Assigned</span>
             {% endif %}
         </td>
 
@@ -110,10 +123,13 @@
         </td>
 
         <td>
-            <a href="/admin/edit-trek/{{ trek.id }}">Edit</a> |
+            <a href="/admin/edit-trek/{{ trek.id }}">Edit</a>
+            |
+            <a href="/admin/participants/{{ trek.id }}">Participants</a>
+            |
             <a href="/admin/delete-trek/{{ trek.id }}"
                onclick="return confirm('Delete this trek?')">
-               Delete
+                Delete
             </a>
         </td>
 

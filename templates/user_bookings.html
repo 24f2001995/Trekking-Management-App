@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Bookings</title>
+</head>
+<body>
+
+<h1>My Bookings / Trekking History</h1>
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Booking ID</th>
+        <th>Trek Name</th>
+        <th>Location</th>
+        <th>Booking Date</th>
+        <th>Trek Status</th>
+        <th>Booking Status</th>
+        <th>Payment Status</th>
+    </tr>
+
+    {% for booking in bookings %}
+    <tr>
+        <td>{{ booking.id }}</td>
+        <td>{{ booking.trek.name }}</td>
+        <td>{{ booking.trek.location }}</td>
+        <td>{{ booking.booking_date }}</td>
+        <td>{{ booking.trek.status }}</td>
+        <td>{{ booking.status }}</td>
+        <td>{{ booking.payment_status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<a href="/user/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

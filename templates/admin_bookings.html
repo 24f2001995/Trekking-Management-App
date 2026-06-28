@@ -16,8 +16,9 @@
         <th>Trek ID</th>
         <th>Trek Name</th>
         <th>Booking Date</th>
-        <th>Status</th>
+        <th>Booking Status</th>
         <th>Payment Status</th>
+        <th>Action</th>
     </tr>
 
     {% for booking in bookings %}
@@ -30,6 +31,15 @@
         <td>{{ booking.booking_date }}</td>
         <td>{{ booking.status }}</td>
         <td>{{ booking.payment_status }}</td>
+
+        <td>
+            {% if booking.payment_status == "Paid" %}
+                <a href="/admin/payment/{{ booking.id }}">Mark Unpaid</a>
+            {% else %}
+                <a href="/admin/payment/{{ booking.id }}">Mark Paid</a>
+            {% endif %}
+        </td>
+
     </tr>
     {% endfor %}
 
