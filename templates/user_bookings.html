@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Bookings</title>
-</head>
-<body>
+{% extends "base_user.html" %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
 
 <h1>My Bookings / Trekking History</h1>
 
-<table border="1" cellpadding="8">
+<table>
     <tr>
         <th>Booking ID</th>
         <th>Trek Name</th>
@@ -16,6 +15,7 @@
         <th>Trek Status</th>
         <th>Booking Status</th>
         <th>Payment Status</th>
+        <th>Action</th>
     </tr>
 
     {% for booking in bookings %}
@@ -29,18 +29,17 @@
         <td>{{ booking.payment_status }}</td>
         <td>
             {% if booking.status == "Booked" and booking.trek.status == "Open" %}
-                <a href="/user/cancel-booking/{{ booking.id }}">Cancel</a>
+                <a href="/user/cancel-booking/{{ booking.id }}" class="btn">Cancel</a>
             {% else %}
                 No Action
             {% endif %}
         </td>
     </tr>
+    {% else %}
+    <tr>
+        <td colspan="8">No bookings found.</td>
+    </tr>
     {% endfor %}
 </table>
 
-<br>
-
-<a href="/user/dashboard">Back to Dashboard</a>
-
-</body>
-</html>
+{% endblock %}

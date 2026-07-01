@@ -1,54 +1,78 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Manage Treks</title>
-</head>
-<body>
+{% extends "base_admin.html" %}
+
+{% block title %}
+Manage Treks
+{% endblock %}
+
+{% block content %}
 
 <h1>Manage Treks</h1>
+<div class="card">
 
-<h2>Create Trek</h2>
+    <h2>Create Trek</h2>
 
-<form method="POST">
+    <form method="POST">
 
-    <label>Trek Name:</label>
-    <input type="text" name="name" required>
-    <br><br>
+        <div class="form-row">
 
-    <label>Location:</label>
-    <input type="text" name="location" required>
-    <br><br>
+            <div class="form-group">
+                <label>Trek Name:</label>
+                <input type="text" name="name" required>
+            </div>
 
-    <label>Difficulty:</label>
-    <select name="difficulty">
-        <option>Easy</option>
-        <option>Moderate</option>
-        <option>Hard</option>
-    </select>
-    <br><br>
+            <div class="form-group">
+                <label>Location:</label>
+                <input type="text" name="location" required>
+            </div>
 
-    <label>Duration (Days):</label>
-    <input type="number" name="duration" required>
-    <br><br>
+        </div>
 
-    <label>Start Date:</label>
-    <input type="date" name="start_date" required>
-    <br><br>
+        <div class="form-row">
 
-    <label>End Date:</label>
-    <input type="date" name="end_date" required>
-    <br><br>
+            <div class="form-group">
+                <label>Difficulty:</label>
+                <select name="difficulty">
+                    <option>Easy</option>
+                    <option>Moderate</option>
+                    <option>Hard</option>
+                </select>
+            </div>
 
-    <label>Available Slots:</label>
-    <input type="number" name="available_slots" required>
-    <br><br>
+            <div class="form-group">
+                <label>Duration (Days):</label>
+                <input type="number" name="duration" required>
+            </div>
 
-    <button type="submit">Create Trek</button>
+        </div>
 
-</form>
+        <div class="form-row">
 
-<hr>
+            <div class="form-group">
+                <label>Start Date:</label>
+                <input type="date" name="start_date" required>
+            </div>
 
+            <div class="form-group">
+                <label>End Date:</label>
+                <input type="date" name="end_date" required>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label>Available Slots:</label>
+            <input type="number" name="available_slots" required>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Create Trek</button>
+        </div>
+
+    </form>
+
+</div>
+
+<div class="card">
 <h2>Existing Treks</h2>
 
 <table border="1" cellpadding="8">
@@ -137,10 +161,6 @@
     {% endfor %}
 
 </table>
+</div>
 
-<br>
-
-<a href="/admin/dashboard">Back to Dashboard</a>
-
-</body>
-</html>
+{% endblock %}

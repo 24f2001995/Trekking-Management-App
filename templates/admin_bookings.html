@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>View Bookings</title>
-</head>
-<body>
+{% extends "base_admin.html" %}
+
+{% block title %}
+Booking Records
+{% endblock %}
+
+{% block content %}
 
 <h1>Booking Records</h1>
 
-<table border="1" cellpadding="8">
+<div class="card">
+
+<table>
 
     <tr>
         <th>Booking ID</th>
@@ -34,20 +37,16 @@
 
         <td>
             {% if booking.payment_status == "Paid" %}
-                <a href="/admin/payment/{{ booking.id }}">Mark Unpaid</a>
+                <a class="btn btn-delete" href="/admin/payment/{{ booking.id }}">Mark Unpaid</a>
             {% else %}
-                <a href="/admin/payment/{{ booking.id }}">Mark Paid</a>
+                <a class="btn btn-success" href="/admin/payment/{{ booking.id }}">Mark Paid</a>
             {% endif %}
         </td>
-
     </tr>
     {% endfor %}
 
 </table>
 
-<br>
+</div>
 
-<a href="/admin/dashboard">Back to Dashboard</a>
-
-</body>
-</html>
+{% endblock %}

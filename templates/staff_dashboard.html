@@ -1,17 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Staff Dashboard</title>
-</head>
-<body>
+{% extends "base_staff.html" %}
+
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
 
 <h1>Staff Dashboard</h1>
 
-<p>Welcome, {{ staff.name }}</p>
+<div class="card">
+    <h2>Welcome, {{ staff.name }}</h2>
+    <p>You can manage assigned treks and view participants using the menu on the left.</p>
+</div>
 
 <h2>Assigned Treks</h2>
 
-<table border="1" cellpadding="8">
+<table>
     <tr>
         <th>ID</th>
         <th>Name</th>
@@ -32,19 +34,18 @@
         <td>{{ trek.available_slots }}</td>
         <td>{{ trek.status }}</td>
         <td>{{ trekker_counts[trek.id] }}</td>
-        <td>
-            <a href="/staff/manage-trek/{{ trek.id }}">Manage</a>
-            |
-            <a href="/staff/participants/{{ trek.id }}">Participants</a>
+        <td style="text-align:center; vertical-align:middle;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+                <a href="/staff/manage-trek/{{ trek.id }}" class="btn">Manage</a>
+                <a href="/staff/participants/{{ trek.id }}" class="btn">Participants</a>
+            </div>
         </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="8">No assigned treks found.</td>
     </tr>
     {% endfor %}
 </table>
 
-<br>
-
-<a href="/staff/profile">Update Profile</a><br><br>
-<a href="/logout">Logout</a>
-
-</body>
-</html>
+{% endblock %}

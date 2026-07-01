@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Admin | Trekking Management{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">🏔 Trekking Management Application</div>
+    <div class="toplink">
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="layout">
+
+    <div class="sidebar">
+    <a href="/admin/dashboard" class="{% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+    <a href="/admin/treks" class="{% if active_page == 'treks' %}active{% endif %}">Manage Treks</a>
+    <a href="/admin/staff" class="{% if active_page == 'staff' %}active{% endif %}">Manage Staff</a>
+    <a href="/admin/users" class="{% if active_page == 'users' %}active{% endif %}">Users</a>
+    <a href="/admin/bookings" class="{% if active_page == 'bookings' %}active{% endif %}">Bookings</a>
+    <a href="/admin/search" class="{% if active_page == 'search' %}active{% endif %}">Search</a>
+</div>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</div>
+
+</body>
+</html>

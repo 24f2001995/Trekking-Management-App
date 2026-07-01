@@ -1,37 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Profile</title>
-</head>
-<body>
+{% extends "base_user.html" %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
 
 <h1>Edit User Profile</h1>
 
-<form method="POST">
+<div class="card">
+    <form method="POST">
 
-    <label>Name:</label>
-    <input type="text" name="name" value="{{ user.name }}" required>
-    <br><br>
+        <label>Name</label>
+        <input type="text" name="name" value="{{ user.name }}" required>
 
-    <label>Email:</label>
-    <input type="email" value="{{ user.email }}" readonly>
-    <br><br>
+        <label>Email</label>
+        <input type="email" value="{{ user.email }}" readonly>
 
-    <label>Phone:</label>
-    <input type="text" name="phone" value="{{ user.phone }}">
-    <br><br>
+        <label>Phone</label>
+        <input type="text" name="phone" value="{{ user.phone }}">
 
-    <label>Password:</label>
-    <input type="text" name="password" value="{{ user.password }}" required>
-    <br><br>
+        <label>Password</label>
+        <input type="text" name="password" value="{{ user.password }}" required>
 
-    <button type="submit">Update Profile</button>
+        <br>
 
-</form>
+        <button type="submit" class="btn">Update Profile</button>
 
-<br>
+    </form>
+</div>
 
-<a href="/user/dashboard">Back to Dashboard</a>
-
-</body>
-</html>
+{% endblock %}

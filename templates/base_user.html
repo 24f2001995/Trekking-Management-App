@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}User | Trekking Management{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">🏔 Trekking Management Application</div>
+    <div class="toplink">
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="layout">
+
+    <div class="sidebar">
+        <a href="/user/dashboard" class="{% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="/user/treks" class="{% if active_page == 'treks' %}active{% endif %}">Browse Treks</a>
+        <a href="/user/bookings" class="{% if active_page == 'bookings' %}active{% endif %}">My Bookings</a>
+        <a href="/user/profile" class="{% if active_page == 'profile' %}active{% endif %}">Profile</a>
+    </div>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,42 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register</title>
+    <title>Register | Trekking Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-    <h2>Register</h2>
+<div class="login-container">
 
-    <form method="POST">
-        <label>Name:</label>
-        <input type="text" name="name" required>
-        <br><br>
+    <div class="card">
 
-        <label>Email:</label>
-        <input type="email" name="email" required>
-        <br><br>
+        <h1 style="text-align:center;">🏔 Trekking Management</h1>
+        <h2 style="text-align:center;">Register</h2>
 
-        <label>Password:</label>
-        <input type="password" name="password" required>
-        <br><br>
+        <form method="POST">
 
-        <label>Phone:</label>
-        <input type="text" name="phone">
-        <br><br>
+            <label>Name</label>
+            <input type="text" name="name" required>
 
-        <label>Register as:</label>
-        <select name="role" required>
-            <option value="user">Trekker/User</option>
-            <option value="staff">Trek Staff</option>
-        </select>
-        <br><br>
+            <label>Email</label>
+            <input type="email" name="email" required>
 
-        <button type="submit">Register</button>
-    </form>
+            <label>Password</label>
+            <input type="password" name="password" required>
 
-    <p>
-        Already registered? <a href="/login">Login here</a>
-    </p>
+            <label>Phone</label>
+            <input type="text" name="phone">
+
+            <label>Register As</label>
+            <select name="role" required>
+                <option value="user">Trekker/User</option>
+                <option value="staff">Trek Staff</option>
+            </select>
+
+            <br>
+
+            <button type="submit" class="btn">Register</button>
+
+        </form>
+
+        <p style="text-align:center; margin-top:20px;">
+            Already registered?
+            <a href="/login">Login here</a>
+        </p>
+
+    </div>
+
+</div>
 
 </body>
 </html>

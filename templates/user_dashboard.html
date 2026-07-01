@@ -1,27 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Dashboard</title>
-</head>
-<body>
+{% extends "base_user.html" %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
 
 <h1>User Dashboard</h1>
 
-<p>Welcome, {{ user.name }}</p>
+<div class="card">
+    <h2>Welcome, {{ user.name }}</h2>
+    <p>
+        Browse available treks, manage your bookings, and update your profile using the menu on the left.
+    </p>
+</div>
 
-<h2>Dashboard</h2>
+<div class="cards">
 
-<p>Available Treks: {{ available_treks_count }}</p>
-<p>My Bookings: {{ my_bookings_count }}</p>
+    <div class="card">
+        <h3>Available Treks</h3>
+        <p>{{ available_treks_count }}</p>
+    </div>
 
-<hr>
+    <div class="card">
+        <h3>My Bookings</h3>
+        <p>{{ my_bookings_count }}</p>
+    </div>
 
-<h2>Actions</h2>
+</div>
 
-<a href="/user/treks">View Available Treks</a><br><br>
-<a href="/user/bookings">My Bookings / Trekking History</a><br><br>
-<a href="/user/profile">Edit Profile</a><br><br>
-<a href="/logout">Logout</a>
-
-</body>
-</html>
+{% endblock %}

@@ -1,39 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Manage Trek</title>
-</head>
-<body>
+{% extends "base_staff.html" %}
+
+{% block title %}Manage Trek{% endblock %}
+
+{% block content %}
 
 <h1>Manage Trek</h1>
 
-<p><b>Trek:</b> {{ trek.name }}</p>
-<p><b>Location:</b> {{ trek.location }}</p>
-<p><b>Difficulty:</b> {{ trek.difficulty }}</p>
-<p><b>Duration:</b> {{ trek.duration }} days</p>
+<div class="card">
+    <h2>{{ trek.name }}</h2>
 
-<form method="POST">
-    <label>Available Slots:</label>
-    <input type="number" name="available_slots" value="{{ trek.available_slots }}" required>
-    <br><br>
+    <p><strong>Location:</strong> {{ trek.location }}</p>
+    <p><strong>Difficulty:</strong> {{ trek.difficulty }}</p>
+    <p><strong>Duration:</strong> {{ trek.duration }} days</p>
+</div>
 
-    <label>Status:</label>
-    <select name="status">
-        <option value="Open" {% if trek.status == "Open" %}selected{% endif %}>Open</option>
-        <option value="Closed" {% if trek.status == "Closed" %}selected{% endif %}>Closed</option>
-        <option value="Started" {% if trek.status == "Started" %}selected{% endif %}>Started</option>
-        <option value="Ongoing" {% if trek.status == "Ongoing" %}selected{% endif %}>Ongoing</option>
-        <option value="Completed" {% if trek.status == "Completed" %}selected{% endif %}>Completed</option>
-    </select>
-    </select>
-    <br><br>
+<div class="card">
 
-    <button type="submit">Update Trek</button>
-</form>
+    <form method="POST">
 
-<br>
+        <label>Available Slots</label>
+        <input
+            type="number"
+            name="available_slots"
+            value="{{ trek.available_slots }}"
+            required
+        >
 
-<a href="/staff/dashboard">Back to Dashboard</a>
+        <label>Status</label>
+        <select name="status">
+            <option value="Open" {% if trek.status == "Open" %}selected{% endif %}>Open</option>
+            <option value="Closed" {% if trek.status == "Closed" %}selected{% endif %}>Closed</option>
+            <option value="Started" {% if trek.status == "Started" %}selected{% endif %}>Started</option>
+            <option value="Ongoing" {% if trek.status == "Ongoing" %}selected{% endif %}>Ongoing</option>
+            <option value="Completed" {% if trek.status == "Completed" %}selected{% endif %}>Completed</option>
+        </select>
 
-</body>
-</html>
+        <br>
+
+        <button type="submit" class="btn">Update Trek</button>
+
+    </form>
+
+</div>
+
+{% endblock %}

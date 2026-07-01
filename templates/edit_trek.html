@@ -1,49 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Trek</title>
-</head>
-<body>
+{% extends "base_admin.html" %}
+
+{% block title %}Edit Trek{% endblock %}
+
+{% block content %}
 
 <h1>Edit Trek</h1>
 
-<form method="POST">
+<div class="card">
 
-    <label>Trek Name:</label>
-    <input type="text" name="name" value="{{ trek.name }}" required>
-    <br><br>
+    <form method="POST">
 
-    <label>Location:</label>
-    <input type="text" name="location" value="{{ trek.location }}" required>
-    <br><br>
+        <label>Trek Name</label>
+        <input type="text" name="name" value="{{ trek.name }}" required>
 
-    <label>Difficulty:</label>
-    <input type="text" name="difficulty" value="{{ trek.difficulty }}" required>
-    <br><br>
+        <label>Location</label>
+        <input type="text" name="location" value="{{ trek.location }}" required>
 
-    <label>Duration:</label>
-    <input type="number" name="duration" value="{{ trek.duration }}" required>
-    <br><br>
+        <label>Difficulty</label>
+        <select name="difficulty">
+            <option value="Easy" {% if trek.difficulty == "Easy" %}selected{% endif %}>Easy</option>
+            <option value="Moderate" {% if trek.difficulty == "Moderate" %}selected{% endif %}>Moderate</option>
+            <option value="Hard" {% if trek.difficulty == "Hard" %}selected{% endif %}>Hard</option>
+        </select>
 
-    <label>Start Date:</label>
-    <input type="date" name="start_date" value="{{ trek.start_date }}" required>
-    <br><br>
+        <label>Duration (Days)</label>
+        <input type="number" name="duration" value="{{ trek.duration }}" required>
 
-    <label>End Date:</label>
-    <input type="date" name="end_date" value="{{ trek.end_date }}" required>
-    <br><br>
+        <label>Start Date</label>
+        <input type="date" name="start_date" value="{{ trek.start_date }}" required>
 
-    <label>Available Slots:</label>
-    <input type="number" name="available_slots" value="{{ trek.available_slots }}" required>
-    <br><br>
+        <label>End Date</label>
+        <input type="date" name="end_date" value="{{ trek.end_date }}" required>
 
-    <button type="submit">Update Trek</button>
+        <label>Available Slots</label>
+        <input type="number" name="available_slots" value="{{ trek.available_slots }}" required>
 
-</form>
+        <br>
 
-<br>
+        <button type="submit" class="btn">Update Trek</button>
 
-<a href="/admin/treks">Back</a>
+    </form>
 
-</body>
-</html>
+</div>
+
+{% endblock %}

@@ -1,33 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Available Treks</title>
-</head>
-<body>
+{% extends "base_user.html" %}
+
+{% block title %}Available Treks{% endblock %}
+
+{% block content %}
 
 <h1>Available Treks</h1>
 
-<form method="GET">
+<div class="card">
+    <form method="GET" class="filter-form">
 
-    <label>Location:</label>
-    <input type="text" name="location" value="{{ location }}">
+        <div>
+            <label>Location</label><br>
+            <input type="text" name="location" value="{{ location }}">
+        </div>
 
-    <label>Difficulty:</label>
-    <select name="difficulty">
-        <option value="">All</option>
-        <option value="Easy" {% if difficulty == "Easy" %}selected{% endif %}>Easy</option>
-        <option value="Moderate" {% if difficulty == "Moderate" %}selected{% endif %}>Moderate</option>
-        <option value="Hard" {% if difficulty == "Hard" %}selected{% endif %}>Hard</option>
-    </select>
+        <div>
+            <label>Difficulty</label><br>
+            <select name="difficulty">
+                <option value="">All</option>
+                <option value="Easy" {% if difficulty=="Easy" %}selected{% endif %}>Easy</option>
+                <option value="Moderate" {% if difficulty=="Moderate" %}selected{% endif %}>Moderate</option>
+                <option value="Hard" {% if difficulty=="Hard" %}selected{% endif %}>Hard</option>
+            </select>
+        </div>
 
-    <button type="submit">Search</button>
+        <div>
+            <button type="submit" class="btn">Search</button>
+        </div>
 
-</form>
+    </form>
+</div>
 
-<br>
-
-<table border="1" cellpadding="8">
-
+<table>
     <tr>
         <th>ID</th>
         <th>Name</th>
@@ -52,18 +56,15 @@
         <td>{{ trek.end_date }}</td>
         <td>{{ trek.available_slots }}</td>
         <td>{{ trek.status }}</td>
-
         <td>
-            <a href="/user/book/{{ trek.id }}">Book</a>
+            <a href="/user/book/{{ trek.id }}" class="btn">Book</a>
         </td>
     </tr>
+    {% else %}
+    <tr>
+        <td colspan="10">No treks found.</td>
+    </tr>
     {% endfor %}
-
 </table>
 
-<br>
-
-<a href="/user/dashboard">Back to Dashboard</a>
-
-</body>
-</html>
+{% endblock %}

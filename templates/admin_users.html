@@ -1,48 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>View Users</title>
-</head>
-<body>
+{% extends "base_admin.html" %}
+
+{% block title %}
+Users
+{% endblock %}
+
+{% block content %}
 
 <h1>Users</h1>
 
-<table border="1" cellpadding="8">
+<div class="card">
+
+<table>
 
     <tr>
         <th>ID</th>
         <th>Name</th>
         <th>Email</th>
-        <th>Role</th>
-        <th>Blacklisted</th>
+        <th>Phone</th>
         <th>Action</th>
+        
     </tr>
 
     {% for user in users %}
     <tr>
+
         <td>{{ user.id }}</td>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
-        <td>{{ user.role }}</td>
-        <td>{{ user.is_blacklisted }}</td>
+        <td>{{ user.phone }}</td>
+
         <td>
-    {% if user.is_blacklisted %}
-        <a href="/admin/unblacklist-user/{{ user.id }}">Unblacklist</a>
-    {% else %}
-        <a href="/admin/blacklist-user/{{ user.id }}">Blacklist</a>
-    {% endif %}
-    </td>
+            {% if user.is_blacklisted %}
+                <a class="btn btn-success"
+                   href="/admin/unblacklist-user/{{ user.id }}">
+                    Unblacklist
+                </a>
+            {% else %}
+                <a class="btn btn-delete"
+                   href="/admin/blacklist-user/{{ user.id }}">
+                    Blacklist
+                </a>
+            {% endif %}
+        </td>
+
     </tr>
-
-    
-
     {% endfor %}
 
 </table>
 
-<br>
+</div>
 
-<a href="/admin/dashboard">Back to Dashboard</a>
-
-</body>
-</html>
+{% endblock %}

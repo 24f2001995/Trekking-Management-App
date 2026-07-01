@@ -100,7 +100,8 @@ def admin_dashboard():
         total_users=total_users,
         total_staff=total_staff,
         total_treks=total_treks,
-        total_bookings=total_bookings
+        total_bookings=total_bookings,
+        active_page="dashboard"
     )
 
 
@@ -126,7 +127,8 @@ def staff_dashboard():
         "staff_dashboard.html",
         staff=staff,
         assigned_treks=assigned_treks,
-        trekker_counts=trekker_counts
+        trekker_counts=trekker_counts,
+        active_page="dashboard"
     )
 
 
@@ -147,7 +149,8 @@ def user_dashboard():
         "user_dashboard.html",
         user=user,
         available_treks_count=available_treks_count,
-        my_bookings_count=my_bookings_count
+        my_bookings_count=my_bookings_count,
+        active_page="dashboard"
     )
 
 @app.route("/user/treks")
@@ -175,7 +178,8 @@ def user_treks():
         "user_treks.html",
         treks=treks,
         location=location,
-        difficulty=difficulty
+        difficulty=difficulty,
+        active_page="treks"
     )
 
 
@@ -188,7 +192,7 @@ def user_bookings():
         user_id=session["user_id"]
     ).all()
 
-    return render_template("user_bookings.html", bookings=bookings)
+    return render_template("user_bookings.html", bookings=bookings,active_page="bookings")
 
 
 @app.route("/user/profile", methods=["GET", "POST"])
@@ -207,7 +211,7 @@ def user_profile():
 
         return redirect("/user/dashboard")
 
-    return render_template("user_profile.html", user=user)
+    return render_template("user_profile.html", user=user,active_page="profile")
 
 @app.route("/admin/staff")
 def admin_staff():
@@ -215,7 +219,7 @@ def admin_staff():
         return redirect("/login")
 
     staff_list = User.query.filter_by(role="staff").all()
-    return render_template("admin_staff.html", staff_list=staff_list)
+    return render_template("admin_staff.html", staff_list=staff_list,active_page="staff")
 
 
 @app.route("/admin/approve-staff/<int:staff_id>")
@@ -273,7 +277,8 @@ def admin_treks():
     return render_template(
         "admin_treks.html",
         treks=treks,
-        staff_list=staff_list
+        staff_list=staff_list,
+        active_page="treks"
         )
 
 @app.route("/admin/users")
@@ -282,7 +287,7 @@ def admin_users():
         return redirect("/login")
 
     users = User.query.filter_by(role="user").all()
-    return render_template("admin_users.html", users=users)
+    return render_template("admin_users.html", users=users,active_page="users")
 
 
 @app.route("/admin/delete-trek/<int:trek_id>")
@@ -319,7 +324,7 @@ def edit_trek(trek_id):
 
         return redirect("/admin/treks")
 
-    return render_template("edit_trek.html", trek=trek)
+    return render_template("edit_trek.html", trek=trek,active_page="treks")
 
 @app.route("/admin/blacklist-user/<int:user_id>")
 def blacklist_user(user_id):
@@ -403,7 +408,7 @@ def admin_bookings():
         return redirect("/login")
 
     bookings = Booking.query.all()
-    return render_template("admin_bookings.html", bookings=bookings)
+    return render_template("admin_bookings.html", bookings=bookings,active_page="bookings")
 
 @app.route("/admin/search")
 def admin_search():
@@ -449,7 +454,8 @@ def admin_search():
         keyword=keyword,
         trek_results=trek_results,
         user_results=user_results,
-        staff_results=staff_results
+        staff_results=staff_results,
+        active_page="search"
     )
 
 @app.route("/staff/manage-trek/<int:trek_id>", methods=["GET", "POST"])
@@ -481,7 +487,7 @@ def staff_manage_trek(trek_id):
 
         return redirect("/staff/dashboard")
 
-    return render_template("manage_trek.html", trek=trek)
+    return render_template("manage_trek.html", trek=trek,active_page="treks")
 
 @app.route("/staff/participants/<int:trek_id>")
 def staff_participants(trek_id):
@@ -501,7 +507,8 @@ def staff_participants(trek_id):
     return render_template(
         "staff_participants.html",
         trek=trek,
-        bookings=bookings
+        bookings=bookings,
+        active_page="treks"
     )
 
 @app.route("/staff/profile", methods=["GET", "POST"])
@@ -520,7 +527,7 @@ def staff_profile():
 
         return redirect("/staff/dashboard")
 
-    return render_template("staff_profile.html", staff=staff)
+    return render_template("staff_profile.html", staff=staff,active_page="profile")
 
 @app.route("/user/book/<int:trek_id>")
 def book_trek(trek_id):
@@ -576,9 +583,10 @@ def admin_participants(trek_id):
     bookings = Booking.query.filter_by(trek_id=trek.id).all()
 
     return render_template(
-        "staff_participants.html",
+        "admin_participants.html",
         trek=trek,
-        bookings=bookings
+        bookings=bookings,
+        active_page="treks"
     )
 
 @app.route("/admin/payment/<int:booking_id>")

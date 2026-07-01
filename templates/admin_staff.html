@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Manage Staff</title>
-</head>
-<body>
+{% extends "base_admin.html" %}
 
-<h2>Manage Trek Staff</h2>
+{% block title %}
+Manage Staff
+{% endblock %}
 
-<table border="1" cellpadding="8">
+{% block content %}
+
+<h1>Manage Trek Staff</h1>
+
+<div class="card">
+
+<table>
 
     <tr>
         <th>ID</th>
@@ -24,23 +27,37 @@
         <td>{{ staff.id }}</td>
         <td>{{ staff.name }}</td>
         <td>{{ staff.email }}</td>
-        <td>{{ staff.is_approved }}</td>
-        <td>{{ staff.is_blacklisted }}</td>
 
         <td>
+            {% if staff.is_approved %}
+                Yes
+            {% else %}
+                No
+            {% endif %}
+        </td>
+
+        <td>
+            {% if staff.is_blacklisted %}
+                Yes
+            {% else %}
+                No
+            {% endif %}
+        </td>
+
+        <td class="action-buttons">
 
             {% if not staff.is_approved %}
-                <a href="/admin/approve-staff/{{ staff.id }}">Approve</a>
-            {% else %}
-                Approved
+                <a class="btn" href="/admin/approve-staff/{{ staff.id }}">Approve</a>
             {% endif %}
 
-            |
-
             {% if staff.is_blacklisted %}
-                <a href="/admin/unblacklist-staff/{{ staff.id }}">Unblacklist</a>
+                <a class="btn btn-success" href="/admin/unblacklist-staff/{{ staff.id }}">
+                    Unblacklist
+                </a>
             {% else %}
-                <a href="/admin/blacklist-staff/{{ staff.id }}">Blacklist</a>
+                <a class="btn btn-delete" href="/admin/blacklist-staff/{{ staff.id }}">
+                    Blacklist
+                </a>
             {% endif %}
 
         </td>
@@ -50,9 +67,6 @@
 
 </table>
 
-<br>
+</div>
 
-<a href="/admin/dashboard">Back to Dashboard</a>
-
-</body>
-</html>
+{% endblock %}

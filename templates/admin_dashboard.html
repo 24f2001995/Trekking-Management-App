@@ -1,29 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-</head>
-<body>
+{% extends "base_admin.html" %}
 
-    <h1>Admin Dashboard</h1>
+{% block title %}Admin Dashboard{% endblock %}
 
-    <h3>Summary</h3>
+{% block content %}
 
-    <p>Total Users: {{ total_users }}</p>
-    <p>Total Staff: {{ total_staff }}</p>
-    <p>Total Treks: {{ total_treks }}</p>
-    <p>Total Bookings: {{ total_bookings }}</p>
+<h1>Admin Dashboard</h1>
 
-    <hr>
+<div class="dashboard-cards">
 
-    <h3>Actions</h3>
+    <div class="summary-card">
+        <h3>👤 Users</h3>
+        <h1>{{ total_users }}</h1>
+    </div>
 
-    <a href="/admin/staff">Manage Staff</a><br><br>
-    <a href="/admin/treks">Manage Treks</a><br><br>
-    <a href="/admin/users">View Users</a><br><br>
-    <a href="/admin/bookings">View Booking Records</a><br><br>
-    <a href="/admin/search">Search</a><br><br>
-    <a href="/logout">Logout</a>
+    <div class="summary-card">
+        <h3>🥾 Staff</h3>
+        <h1>{{ total_staff }}</h1>
+    </div>
 
-</body>
-</html>
+    <div class="summary-card">
+        <h3>🏔 Treks</h3>
+        <h1>{{ total_treks }}</h1>
+    </div>
+
+    <div class="summary-card">
+        <h3>📖 Bookings</h3>
+        <h1>{{ total_bookings }}</h1>
+    </div>
+
+</div>
+
+{% endblock %}
