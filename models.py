@@ -64,6 +64,7 @@ class Booking(db.Model):
 
     payment_status = db.Column(db.String(20), default="Unpaid")
 
+    attendance = db.Column(db.Boolean, default=False)
     user = db.relationship("User", backref="bookings")
     trek = db.relationship("Trek", backref="bookings")
 
