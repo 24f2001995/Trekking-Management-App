@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template,request,redirect, session,flash
 from database import db
 from models import User, Trek, Booking, StaffProfile
 from sqlalchemy import or_
 from datetime import datetime
+
 
 app = Flask(__name__)
 app.secret_key = "simple-secret-key"
@@ -14,13 +15,7 @@ db.init_app(app)
 
 @app.route("/")
 def home():
-    return """
-    <h1>Trekking Management Application</h1>
-
-    <a href="/login">Login</a><br><br>
-
-    <a href="/register">Register</a>
-    """
+    return render_template("log_reg.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -298,11 +293,20 @@ def delete_trek(trek_id):
     trek = Trek.query.get(trek_id)
 
     if trek:
+        print("Trek status =", trek.status)
+
+        if trek.status != "Closed":
+            flash("Only closed treks can be deleted.", "warning")
+            return redirect("/admin/treks")
+        bookings = Booking.query.filter_by(trek_id=trek.id).all()
+
+        for booking in bookings:
+            db.session.delete(booking)
+
         db.session.delete(trek)
         db.session.commit()
 
     return redirect("/admin/treks")
-
 
 @app.route("/admin/edit-trek/<int:trek_id>", methods=["GET", "POST"])
 def edit_trek(trek_id):
@@ -319,6 +323,17 @@ def edit_trek(trek_id):
         trek.start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d").date()
         trek.end_date = datetime.strptime(request.form["end_date"], "%Y-%m-%d").date()
         trek.available_slots = request.form["available_slots"]
+        trek.status = request.form["status"]
+
+        if trek.status == "Completed":
+                bookings = Booking.query.filter_by(
+                    trek_id=trek.id,
+                    status="Booked"
+                ).all()
+
+                for booking in bookings:
+                    booking.status = "Completed"
+
 
         db.session.commit()
 

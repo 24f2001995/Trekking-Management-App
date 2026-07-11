@@ -270,3 +270,19 @@ input,select,textarea{
 .login-container .card{
     width:400px;
 }
+
+/*warning for delete open trek*/
+/* FLASH MESSAGES */
+
+.flash{
+    padding:12px 16px;
+    border-radius:8px;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.flash.warning{
+    background:#fff3cd;
+    color:#856404;
+    border:1px solid #ffeeba;
+}
