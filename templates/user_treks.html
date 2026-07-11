@@ -57,7 +57,16 @@
         <td>{{ trek.available_slots }}</td>
         <td>{{ trek.status }}</td>
         <td>
-            <a href="/user/book/{{ trek.id }}" class="btn">Book</a>
+            {% if trek.id in booked_trek_ids %}
+            <button class="btn" disabled>
+                Booked
+            </button>{% else %}
+
+    <a href="/user/book/{{ trek.id }}" class="btn">
+        Book
+    </a>
+
+{% endif %}
         </td>
     </tr>
     {% else %}

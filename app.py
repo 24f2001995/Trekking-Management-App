@@ -85,7 +85,8 @@ def admin_dashboard():
     total_users = User.query.filter_by(role="user").count()
     total_staff = User.query.filter_by(
     role="staff",
-    is_approved=True
+    is_approved=True,
+    is_blacklisted=False
     ).count()
     total_treks = Trek.query.count()
     total_bookings = Booking.query.count()
@@ -168,14 +169,19 @@ def user_treks():
         query = query.filter(Trek.difficulty == difficulty)
 
     treks = query.all()
+    booked_trek_ids = [booking.trek_id
+    for booking in Booking.query.filter_by(
+        user_id=session["user_id"],
+        status="Booked"
+    ).all()]
 
     return render_template(
-        "user_treks.html",
-        treks=treks,
-        location=location,
-        difficulty=difficulty,
-        active_page="treks"
-    )
+    "user_treks.html",
+    treks=treks,
+    booked_trek_ids=booked_trek_ids,
+    location=location,
+    difficulty=difficulty,
+    active_page="treks")
 
 
 @app.route("/user/bookings")

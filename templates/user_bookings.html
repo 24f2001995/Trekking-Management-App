@@ -10,6 +10,7 @@
     <tr>
         <th>Booking ID</th>
         <th>Trek Name</th>
+        <th>Trek ID</th>
         <th>Location</th>
         <th>Booking Date</th>
         <th>Trek Status</th>
@@ -20,8 +21,9 @@
 
     {% for booking in bookings %}
     <tr>
-        <td>{{ booking.id }}</td>
+        <td>B{{ booking.id }}</td>
         <td>{{ booking.trek.name }}</td>
+        <td>T{{ booking.trek_id }}</td>
         <td>{{ booking.trek.location }}</td>
         <td>{{ booking.booking_date }}</td>
         <td>{{ booking.trek.status }}</td>

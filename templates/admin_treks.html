@@ -94,7 +94,7 @@ Manage Treks
 
     {% for trek in treks %}
     <tr>
-        <td>{{ trek.id }}</td>
+        <td>T{{ trek.id }}</td>
         <td>{{ trek.name }}</td>
         <td>{{ trek.location }}</td>
         <td>{{ trek.difficulty }}</td>
@@ -119,7 +119,7 @@ Manage Treks
 
         <td>
             {% if trek.assigned_staff %}
-                {{ trek.assigned_staff.name }} (ID: {{ trek.assigned_staff.id }})
+                {{ trek.assigned_staff.name }} (ID: S{{ trek.assigned_staff.id }})
             {% else %}
                 <span style="color:red;">Not Assigned</span>
             {% endif %}

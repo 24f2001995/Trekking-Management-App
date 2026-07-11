@@ -33,7 +33,7 @@ Admin Search
 
         {% for trek in trek_results %}
         <tr>
-            <td>{{ trek.id }}</td>
+            <td>T{{ trek.id }}</td>
             <td>{{ trek.name }}</td>
             <td>{{ trek.location }}</td>
             <td>{{ trek.difficulty }}</td>
@@ -56,7 +56,7 @@ Admin Search
 
         {% for user in user_results %}
         <tr>
-            <td>{{ user.id }}</td>
+            <td>U{{ user.id }}</td>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.is_blacklisted }}</td>
@@ -79,7 +79,7 @@ Admin Search
 
         {% for staff in staff_results %}
         <tr>
-            <td>{{ staff.id }}</td>
+            <td>S{{ staff.id }}</td>
             <td>{{ staff.name }}</td>
             <td>{{ staff.email }}</td>
             <td>{{ staff.is_approved }}</td>
