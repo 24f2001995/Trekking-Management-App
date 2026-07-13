@@ -46,6 +46,23 @@ def login():
 
     return render_template("login.html")
 
+def create_admin():
+    if User.query.filter_by(role="admin").first():
+        return
+
+    admin = User(
+        name="Admin",
+        email="admin@tma.com",
+        password="admin123",
+        phone="9999999999",
+        role="admin",
+        is_approved=True,
+        is_blacklisted=False
+    )
+
+    db.session.add(admin)
+    db.session.commit()
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -251,6 +268,18 @@ def admin_treks():
         available_slots = request.form["available_slots"]
         start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d").date()
         end_date = datetime.strptime(request.form["end_date"], "%Y-%m-%d").date()
+        today = datetime.today().date()
+
+        if start_date < today:
+            flash("Invalid Start Date, enter valid date.", "warning")
+            return redirect("/admin/treks")
+
+        if end_date < start_date:
+            flash("Invalid End Date, enter valid date", "warning")
+            return redirect("/admin/treks")
+        
+
+        
         new_trek = Trek(
             name=name,
             location=location,
@@ -447,9 +476,12 @@ def admin_search():
             or_(
                 Trek.name.contains(keyword),
                 Trek.location.contains(keyword),
+            
                 Trek.difficulty.contains(keyword),
+                Trek.status.contains(keyword),
                 Trek.id == keyword if keyword.isdigit() else False
             )
+
         ).all()
 
         user_results = User.query.filter(
@@ -457,8 +489,11 @@ def admin_search():
             or_(
                 User.name.contains(keyword),
                 User.email.contains(keyword),
-                User.id == keyword if keyword.isdigit() else False
+                User.id == keyword if keyword.isdigit() else False,
+                User.is_blacklisted == True if keyword.lower() == "true" else False,
+        User.is_blacklisted == False if keyword.lower() == "false" else False
             )
+
         ).all()
 
         staff_results = User.query.filter(
@@ -466,8 +501,11 @@ def admin_search():
             or_(
                 User.name.contains(keyword),
                 User.email.contains(keyword),
-                User.id == keyword if keyword.isdigit() else False
+                User.is_blacklisted == True if keyword.lower() == "true" else False,
+                User.is_blacklisted == False if keyword.lower() == "false" else False,
+            
             )
+
         ).all()
 
     return render_template(
@@ -531,6 +569,28 @@ def staff_participants(trek_id):
         bookings=bookings,
         active_page="treks"
     )
+
+@app.route("/staff/attendance/<int:booking_id>")
+def mark_attendance(booking_id):
+
+    if "user_id" not in session or session["role"] != "staff":
+        return redirect("/login")
+
+    booking = Booking.query.get(booking_id)
+
+    if not booking:
+        return redirect("/staff/dashboard")
+
+    trek = Trek.query.get(booking.trek_id)
+
+    if trek.assigned_staff_id != session["user_id"]:
+        return "You are not allowed."
+
+    booking.attendance = not booking.attendance
+
+    db.session.commit()
+
+    return redirect(f"/staff/participants/{trek.id}")
 
 @app.route("/staff/profile", methods=["GET", "POST"])
 def staff_profile():
@@ -658,6 +718,6 @@ def logout():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-        print("Database created successfully!")
+        create_admin()
 
     app.run(debug=True)

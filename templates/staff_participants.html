@@ -19,6 +19,8 @@
         <th>Email</th>
         <th>Phone</th>
         <th>Booking Status</th>
+        <th>Attendance</th>
+        <th>Action</th>
     </tr>
 
     {% for booking in bookings %}
@@ -29,6 +31,24 @@
         <td>{{ booking.user.email }}</td>
         <td>{{ booking.user.phone }}</td>
         <td>{{ booking.status }}</td>
+        <td>
+            {% if booking.attendance %}
+                <span style="color:green;"><b>Present</b></span>
+            {% else %}
+                <span style="color:red;"><b>Absent</b></span>
+            {% endif %}
+        </td>
+
+        <td>
+            {% if booking.attendance %}
+                <a href="/staff/attendance/{{ booking.id }}">
+                    Mark Absent
+                </a>
+            {% else %}
+                <a href="/staff/attendance/{{ booking.id }}">
+                    Mark Present
+                </a>
+            {% endif %}</td>
     </tr>
     {% else %}
     <tr>
