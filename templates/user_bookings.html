@@ -13,6 +13,7 @@
         <th>Trek ID</th>
         <th>Location</th>
         <th>Booking Date</th>
+        <th>Booking Time</th>
         <th>Trek Status</th>
         <th>Booking Status</th>
         <th>Payment Status</th>
@@ -25,7 +26,9 @@
         <td>{{ booking.trek.name }}</td>
         <td>T{{ booking.trek_id }}</td>
         <td>{{ booking.trek.location }}</td>
-        <td>{{ booking.booking_date }}</td>
+        <td>{{ booking.booking_date.strftime("%d/%m/%Y") }}</td>
+        <td>{{ booking.booking_date.strftime("%H:%M") }}</td>
+        <td>{{ booking.status }}</td>
         <td>{{ booking.trek.status }}</td>
         <td>{{ booking.status }}</td>
         <td>{{ booking.payment_status }}</td>
