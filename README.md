@@ -8,7 +8,7 @@
 
 ## Installation
 
-Install the required packages:
+Install the required packages:-
 
 pip install Flask Flask-SQLAlchemy
 
